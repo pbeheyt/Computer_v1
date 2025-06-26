@@ -1,4 +1,4 @@
-import { customSqrt } from './math.js';
+import { customSqrt, customAbs, customMax } from './math.js';
 
 /**
  * Represents a polynomial equation and provides methods to solve and display it.
@@ -17,7 +17,7 @@ export class Polynomial {
         }
 
         const powers = Object.keys(this.coefficients).map(Number);
-        this.degree = powers.length > 0 ? Math.max(...powers) : 0;
+        this.degree = powers.length > 0 ? customMax(powers) : 0;
     }
 
     /**
@@ -44,7 +44,7 @@ export class Polynomial {
                 }
             }
 
-            result += `${Math.abs(coeff)} * X^${pow}`;
+            result += `${customAbs(coeff)} * X^${pow}`;
         }
         return result + " = 0";
     }

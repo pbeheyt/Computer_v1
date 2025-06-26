@@ -20,3 +20,31 @@ export function customSqrt(number) {
 
     return guess;
 }
+
+/**
+ * Calculates the absolute value of a number.
+ * @param {number} number The number to find the absolute value of.
+ * @returns {number} The absolute value.
+ */
+export function customAbs(number) {
+    return number < 0 ? -number : number;
+}
+
+/**
+ * Finds the maximum value in an array of numbers.
+ * @param {number[]} numbersArray The array of numbers to search through.
+ * @returns {number} The largest number in the array. Returns -Infinity if the array is empty.
+ */
+export function customMax(numbersArray) {
+    if (!numbersArray || numbersArray.length === 0) {
+        return -Infinity; // Mimics Math.max() behavior for no arguments
+    }
+
+    let max = numbersArray[0];
+    for (let i = 1; i < numbersArray.length; i++) {
+        if (numbersArray[i] > max) {
+            max = numbersArray[i];
+        }
+    }
+    return max;
+}
