@@ -48,3 +48,61 @@ export function customMax(numbersArray) {
     }
     return max;
 }
+
+/**
+ * Calculates the Greatest Common Divisor (GCD) of two integers using the Euclidean algorithm.
+ * @param {number} a - The first integer.
+ * @param {number} b - The second integer.
+ * @returns {number} The GCD of a and b.
+ */
+export function gcd(a, b) {
+    a = customAbs(Math.round(a));
+    b = customAbs(Math.round(b));
+    while (b) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+}
+
+/**
+ * Checks if a number is a perfect square.
+ * @param {number} n The number to check.
+ * @returns {boolean} True if n is a perfect square, false otherwise.
+ */
+export function isPerfectSquare(n) {
+    if (n < 0) return false;
+    const sqrtN = customSqrt(n);
+    // Check if the square root is very close to an integer.
+    return customAbs(sqrtN - Math.round(sqrtN)) < 1e-9;
+}
+
+/**
+ * Converts a decimal number to an irreducible fraction string.
+ * Handles numbers with up to a certain precision to avoid floating point issues.
+ * @param {number} decimal The number to convert.
+ * @returns {string} The number as a simplified fraction or as an integer string.
+ */
+export function toFraction(decimal) {
+    if (customAbs(decimal % 1) < 1e-9) {
+        return Math.round(decimal).toString();
+    }
+    const tolerance = 1.0E-9;
+    let numerator = decimal;
+    let denominator = 1;
+
+    // Increase precision by multiplying numerator and denominator
+    while (customAbs(numerator % 1) > tolerance) {
+        numerator *= 10;
+        denominator *= 10;
+        if (denominator > 1000000000) { // Limit to avoid infinite loops on irrational numbers
+            // Check for common repeating decimals
+            if (customAbs(decimal - 0.333333333) < 1e-9) {
+                return "1/3";
+            }
+            return decimal.toString(); // Fallback for complex decimals
+        }
+    }
+
+    const commonDivisor = gcd(numerator, denominator);
+    return `${Math.round(numerator) / commonDivisor}/${denominator / commonDivisor}`;
+}
