@@ -1,0 +1,19 @@
+{
+  "name": "computorv1",
+  "version": "1.0.0",
+  "description": "A polynomial equation solver with Jest tests.",
+  "main": "computor.js",
+  "type": "module",
+  "scripts": {
+    "start": "node computor.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "ai-digest": "^1.2.2"
+  }
+}
