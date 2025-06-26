@@ -187,27 +187,43 @@ export class Polynomial {
 
             if (customAbs(discriminant) < 1e-9) {
                  console.log("Discriminant is zero, the solution is:");
-                 console.log(-b / (2 * a));
+                 console.log(toFraction(-b / (2 * a)));
             } else if (discriminant > 0) {
                 console.log("Discriminant is strictly positive, the two solutions are:");
                 const sqrtD = customSqrt(discriminant);
+                // The subject requires floating point output for this case.
                 console.log((-b + sqrtD) / (2 * a));
                 console.log((-b - sqrtD) / (2 * a));
             } else {
                 console.log("Discriminant is strictly negative, the two complex solutions are:");
                 const realPart = -b / (2 * a);
                 const imagPart = customSqrt(-discriminant) / (2 * a);
-                // The subject shows the imaginary part as a single term (e.g., 2i/5).
-                // We will replicate this style.
+                
                 const realFrac = toFraction(realPart);
-                const imagFrac = toFraction(imagPart);
-                console.log(`${realFrac} + ${imagFrac} * i`);
-                console.log(`${realFrac} - ${imagFrac} * i`);
+                const imagFracStr = toFraction(imagPart);
+                
+                // New logic to format the imaginary part to match subject: "2i/5" or "3i"
+                let formattedImagPart;
+                if (imagFracStr.includes('/')) {
+                    const [num, den] = imagFracStr.split('/');
+                    // Handle the case of a negative fraction string for the imaginary part
+                    const absNum = num.replace('-', '');
+                    formattedImagPart = `${absNum}i/${den}`;
+                } else if (imagFracStr === '1') {
+                    formattedImagPart = 'i';
+                } else if (imagFracStr === '-1') {
+                    formattedImagPart = 'i'; // The sign is handled by the +/- in the final output
+                } else {
+                    formattedImagPart = `${customAbs(parseFloat(imagFracStr))}i`;
+                }
+
+                console.log(`${realFrac} + ${formattedImagPart}`);
+                console.log(`${realFrac} - ${formattedImagPart}`);
             }
         } else if (this.degree === 1) {
             const a = getCoeff(1), b = getCoeff(0);
             console.log("The solution is:");
-            console.log(-b / a);
+            console.log(toFraction(-b / a));
         } else if (this.degree === 0) {
             if (getCoeff(0) === 0) {
                 console.log("Any real number is a solution.");

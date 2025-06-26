@@ -77,32 +77,44 @@ export function isPerfectSquare(n) {
 }
 
 /**
- * Converts a decimal number to an irreducible fraction string.
- * Handles numbers with up to a certain precision to avoid floating point issues.
+ * Converts a decimal number to its best rational approximation (irreducible fraction)
+ * using the continued fractions algorithm. This is a standard and robust method.
  * @param {number} decimal The number to convert.
+ * @param {number} [tolerance=1.0E-9] - The precision tolerance to stop the algorithm.
+ * @param {number} [maxIterations=15] - The maximum number of iterations to prevent infinite loops.
  * @returns {string} The number as a simplified fraction or as an integer string.
  */
-export function toFraction(decimal) {
-    if (customAbs(decimal % 1) < 1e-9) {
+export function toFraction(decimal, tolerance = 1.0E-9, maxIterations = 25) {
+    // Handle integers immediately
+    if (customAbs(decimal % 1) < tolerance) {
         return Math.round(decimal).toString();
     }
-    const tolerance = 1.0E-9;
-    let numerator = decimal;
-    let denominator = 1;
 
-    // Increase precision by multiplying numerator and denominator
-    while (customAbs(numerator % 1) > tolerance) {
-        numerator *= 10;
-        denominator *= 10;
-        if (denominator > 1000000000) { // Limit to avoid infinite loops on irrational numbers
-            // Check for common repeating decimals
-            if (customAbs(decimal - 0.333333333) < 1e-9) {
-                return "1/3";
-            }
-            return decimal.toString(); // Fallback for complex decimals
-        }
+    const sign = decimal < 0 ? "-" : "";
+    const x = customAbs(decimal);
+
+    let h1 = 1, h2 = 0;
+    let k1 = 0, k2 = 1;
+    let b = x;
+    let i = 0;
+
+    // The core of the continued fractions algorithm
+    do {
+        const a = Math.floor(b);
+        let aux = h1;
+        h1 = a * h1 + h2;
+        h2 = aux;
+        aux = k1;
+        k1 = a * k1 + k2;
+        k2 = aux;
+        b = 1 / (b - a);
+        i++;
+    } while (customAbs(x - h1 / k1) > x * tolerance && i < maxIterations);
+    
+    // If the denominator is 0, something went wrong, return decimal.
+    if (k1 === 0) {
+        return decimal.toString();
     }
 
-    const commonDivisor = gcd(numerator, denominator);
-    return `${Math.round(numerator) / commonDivisor}/${denominator / commonDivisor}`;
+    return `${sign}${h1}/${k1}`;
 }
