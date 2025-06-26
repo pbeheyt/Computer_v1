@@ -86,55 +86,91 @@ export class Polynomial {
     }
 
     /**
-     * Solves with detailed, colorful output.
+     * Solves with a detailed, structured, and colorful report.
      * @param {object} colorConfig - The ANSI color codes.
      */
     solveVerbose(colorConfig) {
         const { red = '', yellow = '', cyan = '', reset = '' } = colorConfig;
         const getCoeff = (p) => this.coefficients[p] || 0;
+        const divider = `${yellow}----------------------------------------${reset}`;
+
+        console.log(divider);
+        console.log(`${yellow}--- 1. Analysis${reset}`);
+        console.log(divider);
 
         if (this.degree === 2) {
             const a = getCoeff(2), b = getCoeff(1), c = getCoeff(0);
-            console.log(`${yellow}Equation is of degree 2. Coefficients: a=${a}, b=${b}, c=${c}${reset}`);
+            console.log(`  Equation Type: Quadratic (degree 2)`);
+            console.log(`  Coefficients: a = ${a}, b = ${b}, c = ${c}`);
+            
+            console.log(divider);
+            console.log(`${yellow}--- 2. Discriminant Calculation (Δ)${reset}`);
+            console.log(divider);
             const discriminant = b * b - 4 * a * c;
-            console.log(`Using formula: Δ = b² - 4ac`);
-            console.log(`Δ = (${b})² - 4 * (${a}) * (${c}) = ${discriminant}`);
+            console.log(`  Formula: Δ = b² - 4ac`);
+            console.log(`  Calculation: Δ = (${b})² - 4 * (${a}) * (${c})`);
+            console.log(`  Result: Δ = ${discriminant}`);
+
+            console.log(divider);
+            console.log(`${yellow}--- 3. Solution${reset}`);
+            console.log(divider);
 
             if (customAbs(discriminant) < 1e-9) {
-                 console.log("Discriminant is zero. Using formula: x = -b / (2a)");
-                 console.log(`${cyan}${toFraction(-b / (2 * a))}${reset}`);
+                 console.log(`  Discriminant is zero. Using formula: x = -b / (2a)`);
+                 console.log(`  Plugging in values: x = -(${b}) / (2 * ${a})`);
+                 console.log(`  The solution is:`);
+                 console.log(`    ${cyan}${toFraction(-b / (2 * a))}${reset}`);
             } else if (discriminant > 0) {
-                console.log("Discriminant is strictly positive. Using formula: x = (-b ± √Δ) / (2a)");
+                console.log(`  Discriminant is positive. Using the quadratic formula:`);
+                console.log(`  Formula: x = (-b ± √Δ) / (2a)`);
                 const sqrtD = customSqrt(discriminant);
+                console.log(`  Plugging in values: x = (-(${b}) ± √${discriminant}) / (2 * ${a})`);
+                console.log(`  The two real solutions are:`);
                 if (isPerfectSquare(discriminant)) {
-                    console.log(`${cyan}${toFraction((-b + sqrtD) / (2 * a))}${reset}`);
-                    console.log(`${cyan}${toFraction((-b - sqrtD) / (2 * a))}${reset}`);
+                    console.log(`    ${cyan}${toFraction((-b + sqrtD) / (2 * a))}${reset}`);
+                    console.log(`    ${cyan}${toFraction((-b - sqrtD) / (2 * a))}${reset}`);
                 } else {
-                    const x1 = (-b + sqrtD) / (2 * a);
-                    const x2 = (-b - sqrtD) / (2 * a);
-                    console.log(`${cyan}${x1}${reset}`);
-                    console.log(`${cyan}${x2}${reset}`);
+                    console.log(`    ${cyan}${(-b + sqrtD) / (2 * a)}${reset}`);
+                    console.log(`    ${cyan}${(-b - sqrtD) / (2 * a)}${reset}`);
                 }
-            } else {
-                console.log("Discriminant is strictly negative. Using formulas for complex roots:");
-                console.log("x = (-b ± i√(-Δ)) / (2a)");
+            } else { // discriminant < 0
+                console.log(`  Discriminant is negative. Using the formula for complex roots:`);
+                console.log(`  Formula: x = (-b ± i√(-Δ)) / (2a)`);
+                const sqrtD = customSqrt(-discriminant);
+                console.log(`\n  Plugging in values:`);
+                console.log(`    x = (-(${b}) ± i√(-(${discriminant}))) / (2 * ${a})`);
+                console.log(`    x = (-${b} ± i√${-discriminant}) / ${2 * a}`);
+                console.log(`    x = -${b}/${2*a} ± i * ${sqrtD}/${2*a}`);
+                console.log(`\n  The two complex solutions are:`);
                 const realPart = -b / (2 * a);
-                const imagPart = customSqrt(-discriminant) / (2 * a);
-                const realFraction = toFraction(realPart);
-                const imagFraction = toFraction(imagPart);
-                
-                console.log(`${cyan}${realFraction} + i * ${imagFraction}${reset}`);
-                console.log(`${cyan}${realFraction} - i * ${imagFraction}${reset}`);
+                const imagPart = sqrtD / (2 * a);
+                console.log(`    ${cyan}${toFraction(realPart)} + i * ${toFraction(imagPart)}${reset}`);
+                console.log(`    ${cyan}${toFraction(realPart)} - i * ${toFraction(imagPart)}${reset}`);
             }
         } else if (this.degree === 1) {
             const a = getCoeff(1), b = getCoeff(0);
-            console.log(`${yellow}Equation is of degree 1. Solving for x: ax + b = 0  =>  x = -b / a${reset}`);
-            console.log(`${cyan}${toFraction(-b / a)}${reset}`);
+            console.log(`  Equation Type: Linear (degree 1)`);
+            console.log(`  Solving for x: ${a}x + ${b} = 0`);
+            
+            console.log(divider);
+            console.log(`${yellow}--- 2. Solution${reset}`);
+            console.log(divider);
+            console.log(`  Formula: x = -b / a`);
+            console.log(`  Plugging in values: x = -(${b}) / ${a}`);
+            console.log(`  The solution is:`);
+            console.log(`    ${cyan}${toFraction(-b / a)}${reset}`);
+
         } else if (this.degree === 0) {
+            console.log(`  Equation Type: Constant (degree 0)`);
+            console.log(divider);
+            console.log(`${yellow}--- 2. Solution${reset}`);
+            console.log(divider);
             if (getCoeff(0) === 0) {
-                console.log(`${cyan}Any real number is a solution.${reset}`);
+                console.log(`  The equation is 0 = 0, which is always true.`);
+                console.log(`    ${cyan}Any real number is a solution.${reset}`);
             } else {
-                console.log(`${red}No solution.${reset}`);
+                console.log(`  The equation ${getCoeff(0)} = 0 is a contradiction.`);
+                console.log(`    ${red}No solution.${reset}`);
             }
         }
     }
