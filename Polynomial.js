@@ -98,8 +98,6 @@ export class Polynomial {
             } else {
                 console.log("No solution.");
             }
-        } else {
-             console.log("Any real number is a solution.");
         }
     }
 }
