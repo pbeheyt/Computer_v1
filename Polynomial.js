@@ -26,7 +26,7 @@ export class Polynomial {
      */
     toString() {
         if (Object.keys(this.coefficients).length === 0) {
-            return "0 = 0";
+            return "0 * X^0 = 0";
         }
 
         let result = "";
