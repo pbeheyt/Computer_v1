@@ -50,14 +50,39 @@ export function customMax(numbersArray) {
 }
 
 /**
+ * Custom implementation of floor function.
+ * @param {number} number The number to floor.
+ * @returns {number} The largest integer less than or equal to the number.
+ */
+export function customFloor(number) {
+    // parseInt truncates towards zero (e.g., -3.7 -> -3)
+    const truncated = parseInt(number);
+    // If the number is negative and had a fractional part, subtract 1 to get the floor.
+    if (number < 0 && number !== truncated) {
+        return truncated - 1;
+    }
+    return truncated;
+}
+
+/**
+ * Custom implementation of round function using customFloor.
+ * @param {number} number The number to round.
+ * @returns {number} The number rounded to the nearest integer.
+ */
+export function customRound(number) {
+    // Standard rounding algorithm: floor(x + 0.5)
+    return customFloor(number + 0.5);
+}
+
+/**
  * Calculates the Greatest Common Divisor (GCD) of two integers using the Euclidean algorithm.
  * @param {number} a - The first integer.
  * @param {number} b - The second integer.
  * @returns {number} The GCD of a and b.
  */
 export function gcd(a, b) {
-    a = customAbs(Math.round(a));
-    b = customAbs(Math.round(b));
+    a = customAbs(customRound(a));
+    b = customAbs(customRound(b));
     while (b) {
         [a, b] = [b, a % b];
     }
@@ -73,7 +98,7 @@ export function isPerfectSquare(n) {
     if (n < 0) return false;
     const sqrtN = customSqrt(n);
     // Check if the square root is very close to an integer.
-    return customAbs(sqrtN - Math.round(sqrtN)) < 1e-9;
+    return customAbs(sqrtN - customRound(sqrtN)) < 1e-9;
 }
 
 /**
@@ -85,9 +110,9 @@ export function isPerfectSquare(n) {
  * @returns {string} The number as a simplified fraction or as an integer string.
  */
 export function toFraction(decimal, tolerance = 1.0E-9, maxIterations = 25) {
-    // Handle integers immediately
-    if (customAbs(decimal % 1) < tolerance) {
-        return Math.round(decimal).toString();
+    // Handle integers immediately using a robust check
+    if (customAbs(decimal - customRound(decimal)) < tolerance) {
+        return customRound(decimal).toString();
     }
 
     const sign = decimal < 0 ? "-" : "";
@@ -100,7 +125,7 @@ export function toFraction(decimal, tolerance = 1.0E-9, maxIterations = 25) {
 
     // The core of the continued fractions algorithm
     do {
-        const a = Math.floor(b);
+        const a = customFloor(b);
         let aux = h1;
         h1 = a * h1 + h2;
         h2 = aux;

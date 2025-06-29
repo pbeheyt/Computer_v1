@@ -1,4 +1,4 @@
-import { customSqrt, gcd, isPerfectSquare, toFraction } from '../math.js';
+import { customSqrt, gcd, isPerfectSquare, toFraction, customFloor, customRound } from '../math.js';
 
 describe('customSqrt', () => {
     it('should return the correct square root for perfect squares', () => {
@@ -8,6 +8,40 @@ describe('customSqrt', () => {
     });
     it('should return NaN for negative numbers', () => {
         expect(customSqrt(-1)).toBeNaN();
+    });
+});
+
+describe('customFloor', () => {
+    it('should floor positive numbers correctly', () => {
+        expect(customFloor(3.14)).toBe(3);
+        expect(customFloor(3.99)).toBe(3);
+    });
+    it('should floor negative numbers correctly', () => {
+        expect(customFloor(-3.14)).toBe(-4);
+        expect(customFloor(-3.99)).toBe(-4);
+    });
+    it('should handle integers and zero correctly', () => {
+        expect(customFloor(5)).toBe(5);
+        expect(customFloor(-5)).toBe(-5);
+        expect(customFloor(0)).toBe(0);
+    });
+});
+
+describe('customRound', () => {
+    it('should round positive numbers correctly', () => {
+        expect(customRound(3.14)).toBe(3);
+        expect(customRound(3.75)).toBe(4);
+        expect(customRound(3.5)).toBe(4);
+    });
+    it('should round negative numbers correctly', () => {
+        expect(customRound(-3.14)).toBe(-3);
+        expect(customRound(-3.75)).toBe(-4);
+        expect(customRound(-3.5)).toBe(-3);
+    });
+    it('should handle integers and zero correctly', () => {
+        expect(customRound(5)).toBe(5);
+        expect(customRound(-5)).toBe(-5);
+        expect(customRound(0)).toBe(0);
     });
 });
 
