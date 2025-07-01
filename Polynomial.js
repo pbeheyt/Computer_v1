@@ -1,4 +1,4 @@
-import { customSqrt, customAbs, customMax, isPerfectSquare, toFraction } from './math.js';
+import { customSqrt, customAbs, customMax, toFraction } from './math.js';
 
 /**
  * Represents a polynomial equation and provides methods to solve and display it.
@@ -126,13 +126,11 @@ export class Polynomial {
                 const sqrtD = customSqrt(discriminant);
                 console.log(`  Plugging in values: x = (-(${b}) ± √${discriminant}) / (2 * ${a})`);
                 console.log(`  The two real solutions are:`);
-                if (isPerfectSquare(discriminant)) {
-                    console.log(`    ${cyan}${toFraction((-b + sqrtD) / (2 * a))}${reset}`);
-                    console.log(`    ${cyan}${toFraction((-b - sqrtD) / (2 * a))}${reset}`);
-                } else {
-                    console.log(`    ${cyan}${(-b + sqrtD) / (2 * a)}${reset}`);
-                    console.log(`    ${cyan}${(-b - sqrtD) / (2 * a)}${reset}`);
-                }
+                // Use our simplified toFraction for consistency, or fall back to float if it's not a clean fraction.
+                const sol1 = toFraction((-b + sqrtD) / (2 * a));
+                const sol2 = toFraction((-b - sqrtD) / (2 * a));
+                console.log(`    ${cyan}${sol1.includes('/') ? sol1 : (-b + sqrtD) / (2 * a)}${reset}`);
+                console.log(`    ${cyan}${sol2.includes('/') ? sol2 : (-b - sqrtD) / (2 * a)}${reset}`);
             } else { // discriminant < 0
                 console.log(`  Discriminant is negative. Using the formula for complex roots:`);
                 console.log(`  Formula: x = (-b ± i√(-Δ)) / (2a)`);
