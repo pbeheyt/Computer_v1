@@ -12,8 +12,5 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^29.7.0"
-  },
-  "dependencies": {
-    "ai-digest": "^1.2.2"
   }
 }
